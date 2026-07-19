@@ -11,4 +11,4 @@ python-multipart==0.0.20
 supabase==2.11.0
 groq==0.15.0
 bcrypt<4.0.0
-phonenumbers==8.13.55
+phonenumbers==8.13.55dnspython==2.7.0
