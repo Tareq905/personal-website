@@ -17,11 +17,16 @@ from app.routers import (
 
 app = FastAPI(title="Tareq Portfolio API")
 
-origins = [settings.FRONTEND_URL, "http://localhost:5173"]
+# Explicit known origins (production + local dev)
+origins = [
+    settings.FRONTEND_URL,
+    "http://localhost:5173",
+]
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
+    allow_origin_regex=r"https://tareq.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
