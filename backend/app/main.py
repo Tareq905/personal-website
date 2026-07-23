@@ -17,16 +17,22 @@ from app.routers import (
 
 app = FastAPI(title="Tareq Portfolio API")
 
-origins = [settings.FRONTEND_URL, "http://localhost:5173"]
+# Explicit known origins (production + local dev)
+origins = [
+    settings.FRONTEND_URL,
+    "http://localhost:5173",
+    "https://tareqshahalam.is-a.dev",
+    "https://tareqshahalam.com",
+    "https://www.tareqshahalam.com",
+]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
+    allow_origins=["*"],
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 
 @app.on_event("startup")
 def on_startup():

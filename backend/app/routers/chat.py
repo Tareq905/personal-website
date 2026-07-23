@@ -13,8 +13,9 @@ from app.utils.email_validator import is_valid_email
 router = APIRouter(prefix="/api/ai", tags=["ai"])
 client = Groq(api_key=settings.GROQ_API_KEY)
 
-TEXT_MODEL = "llama-3.3-70b-versatile"
-VISION_MODEL = "llama-3.2-90b-vision-preview"
+# Updated to currently supported Groq models (as of July 2026)
+TEXT_MODEL = "openai/gpt-oss-120b"
+VISION_MODEL = "qwen/qwen3.6-27b"
 
 EMAIL_REGEX = re.compile(r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}")
 PHONE_REGEX = re.compile(r"(\+?\d[\d\s-]{7,15}\d)")
@@ -118,7 +119,6 @@ def chat(payload: ChatRequest, db: Session = Depends(get_db)):
                 awaiting_contact_info=True,
             )
 
-        # both present (or at least one valid) -> save
         pq = PersonalQuery(
             question=payload.pending_personal_question,
             visitor_email=email_match.group(0) if email_match and email_ok else None,
@@ -161,6 +161,13 @@ def chat(payload: ChatRequest, db: Session = Depends(get_db)):
             reply="Temporarily limit reached, wait a bit...!",
             rate_limited=True,
         )
+    except Exception as e:
+        # Catch-all so the request never crashes without CORS headers
+        print(f"Groq API error: {e}")
+        return ChatResponse(
+            reply="Oops, I had trouble processing that. Could you try again?",
+            rate_limited=False,
+        )
 
     reply = completion.choices[0].message.content
     awaiting = CANNOT_ANSWER_MARKER in reply
@@ -188,6 +195,9 @@ Only return the description text, no preamble."""
         )
     except RateLimitError:
         return GenerateDescriptionResponse(description="Temporarily limit reached, wait a bit...!")
+    except Exception as e:
+        print(f"Groq API error: {e}")
+        return GenerateDescriptionResponse(description="Something went wrong generating this. Try again.")
 
     description = completion.choices[0].message.content.strip()
     return GenerateDescriptionResponse(description=description)
