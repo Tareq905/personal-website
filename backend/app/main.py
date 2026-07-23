@@ -21,17 +21,19 @@ app = FastAPI(title="Tareq Portfolio API")
 origins = [
     settings.FRONTEND_URL,
     "http://localhost:5173",
+    "https://tareqshahalam.is-a.dev",
+    "https://tareqshahalam.com",
+    "https://www.tareqshahalam.com",
 ]
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
-    allow_origin_regex=r"https://tareq.*\.vercel\.app",
+    allow_origin_regex=r"https://(tareq.*\.vercel\.app|.*tareqshahalam.*)",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 
 @app.on_event("startup")
 def on_startup():
