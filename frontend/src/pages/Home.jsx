@@ -57,10 +57,9 @@ export default function Home() {
         </div>
         <div className="bg-surface border border-border rounded-2xl p-8 hover:border-accent/30 transition-colors">
           <Shield className="text-accent mb-4" size={32} />
-          <h3 className="font-display font-semibold text-xl mb-2">Security-Conscious</h3>
+          <h3 className="font-display font-semibold text-xl mb-2">Secure-First Mindset</h3>
           <p className="text-textDim text-sm leading-relaxed">
-            Experience across pentesting and secure API development — building
-            systems that are designed to be resilient, not just functional.
+            Approaching system architecture with a deep awareness of safety. Engineering intelligent environments where data integrity and threat resilience are built-in from day one.
           </p>
         </div>
       </section>
